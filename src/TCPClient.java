@@ -16,6 +16,7 @@ public class TCPClient {
 		
 		
 		while(on) {
+			System.out.print("Matrikelnummer eingeben: ");
 			try {
 				message = sc.nextLine(); 
 				if(message.equals("q")) {
