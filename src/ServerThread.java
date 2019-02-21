@@ -11,10 +11,12 @@ import java.util.Date;
 public class ServerThread implements Runnable{
 	
 	private Socket clientSocket;
-	private int matNumber; 
+	private int matrNumber = 0;  
+	private DBConnection dbc; 
 	
 	public ServerThread(Socket clientSocket) {
 	      this.clientSocket = clientSocket;
+	      this.dbc = new DBConnection(); 
 	}
 	
 	
@@ -33,9 +35,13 @@ public class ServerThread implements Runnable{
 			String capitalizedSentence = checkMatrNumber(clientSentence) + '\n';
 			outToClient.writeBytes(capitalizedSentence);
 	 
+			
 			inFromClient.close();
 			outToClient.close();
 			clientSocket.close();
+			
+			//Store access information
+			dbc.storeAccess(clientSocket.getInetAddress().getHostName(), matrNumber);
 		} catch (IOException e) {
 			System.out.println(e);
 		}
@@ -44,14 +50,6 @@ public class ServerThread implements Runnable{
 	private String checkMatrNumber(String clientSentence) {
 		String failMessage = "This is not a matriculation number";
 		String answer = ""; 
-		int matNumber = 0; 
-		
-		try {
-			matNumber =  Integer.parseInt(clientSentence);		
-		} catch(NumberFormatException e) {
-			return failMessage; 
-		}
-		System.out.println(clientSentence.charAt(0));
 		
 		if (clientSentence.length()!=8 || 
 				!(clientSentence.charAt(0)>='0'&&clientSentence.charAt(0)<='4'))  
@@ -72,11 +70,17 @@ public class ServerThread implements Runnable{
 			Date date2 = simpleDateFormat.parse(simpleDateFormat.format((new Date())));
 			
 			answer = calcDifference(date1, date2);
-			
 		} catch (ParseException e) {
 			e.printStackTrace();
 			return failMessage; 
 		}
+		
+		try {
+			matrNumber =  Integer.parseInt(clientSentence);		
+		} catch(NumberFormatException e) {
+			return failMessage; 
+		}
+		
 		return answer;
 	}
 		
@@ -113,8 +117,8 @@ public class ServerThread implements Runnable{
 			    elapsedDays,
 			    elapsedHours, elapsedMinutes, elapsedSeconds);
 			
-			return "Sie sind seit " + elapsedDays + " Tagen, " + elapsedHours + " Stunden, "
-					+ elapsedMinutes + " Minuten und " + elapsedSeconds + " Sekunden inskribiert";
+			return "Sie haben vor " + elapsedDays + " Tagen, " + elapsedHours + " Stunden, "
+					+ elapsedMinutes + " Minuten und " + elapsedSeconds + " Sekunden, begonnen zu studieren";
 		
 		}		
 	
