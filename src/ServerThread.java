@@ -30,14 +30,18 @@ public class ServerThread implements Runnable{
 					clientSocket.getOutputStream());
 	  
 			String clientSentence = inFromClient.readLine();
+			if(clientSentence == null){
+				clientSocket.close();
+				return;
+			}
 			String capitalizedSentence = checkMatrNumber(clientSentence) + '\n';
 			outToClient.writeBytes(capitalizedSentence);
 	 
 			inFromClient.close();
 			outToClient.close();
 			clientSocket.close();
-		} catch (IOException e) {
-			System.out.println(e);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
