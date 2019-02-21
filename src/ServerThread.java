@@ -1,6 +1,5 @@
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.text.ParseException;
@@ -32,6 +31,10 @@ public class ServerThread implements Runnable{
 					clientSocket.getOutputStream());
 	  
 			String clientSentence = inFromClient.readLine();
+			if(clientSentence == null){
+				clientSocket.close();
+				return;
+			}
 			String capitalizedSentence = checkMatrNumber(clientSentence) + '\n';
 			outToClient.writeBytes(capitalizedSentence);
 	 
@@ -39,11 +42,13 @@ public class ServerThread implements Runnable{
 			inFromClient.close();
 			outToClient.close();
 			clientSocket.close();
+
 			
 			//Store access information
 			dbc.storeAccess(clientSocket.getInetAddress().getHostName(), matrNumber);
-		} catch (IOException e) {
-			System.out.println(e);
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
