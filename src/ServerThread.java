@@ -1,5 +1,8 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.text.ParseException;
@@ -11,11 +14,9 @@ public class ServerThread implements Runnable{
 	
 	private Socket clientSocket;
 	private int matrNumber = 0;  
-	private DBConnection dbc; 
 	
 	public ServerThread(Socket clientSocket) {
 	      this.clientSocket = clientSocket;
-	      this.dbc = new DBConnection(); 
 	}
 	
 	
@@ -43,17 +44,14 @@ public class ServerThread implements Runnable{
 			outToClient.close();
 			clientSocket.close();
 
-			
-			//Store access information
-			dbc.storeAccess(clientSocket.getInetAddress().getHostName(), matrNumber);
-
+			storeAccess(clientSocket.getInetAddress().getHostName(), matrNumber);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
 	private String checkMatrNumber(String clientSentence) {
-		String failMessage = "This is not a matriculation number";
+		String failMessage = "Dies ist keine gültige Matrikelnummer";
 		String answer = ""; 
 		
 		if (clientSentence.length()!=8 || 
@@ -125,6 +123,23 @@ public class ServerThread implements Runnable{
 			return "Sie haben vor " + elapsedDays + " Tagen, " + elapsedHours + " Stunden, "
 					+ elapsedMinutes + " Minuten und " + elapsedSeconds + " Sekunden, begonnen zu studieren";
 		
-		}		
+		}	
+		
+		private void storeAccess(String ip, int matrNumber) {
+			
+			try {
+				FileWriter fw = new FileWriter("clientData.csv", true);
+				BufferedWriter bw = new BufferedWriter(fw);
+				bw.write(ip + ", " + String.valueOf(matrNumber) + "\n");
+				bw.flush();
+				bw.close();
+				
+			} catch (IOException e) {
+				System.out.println("Storing access info failed"); 
+				e.printStackTrace();
+			}
+			
+			
+		}
 	
 }
