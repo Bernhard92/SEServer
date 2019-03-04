@@ -47,7 +47,7 @@ public class ServerThread implements Runnable {
     }
 
     private String checkMatrNumber(String clientSentence) {
-        String failMessage = "Dies ist keine gültige Matrikelnummer";
+        String failMessage = "Dies ist keine gueltige Matrikelnummer";
         String answer = "";
 
         if (clientSentence == null)
