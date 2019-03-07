@@ -40,7 +40,7 @@ public class ServerThread implements Runnable {
             outToClient.close();
             clientSocket.close();
 
-            Logger.getLogger().storeAccess(clientSocket.getInetAddress().getHostName(), matrNumber);
+            Logger.getLogger().storeAccess(clientSocket.getInetAddress().getHostName(), clientSentence);
         } catch (Exception e) {
             Logger.getLogger().log(e.getMessage());
         }

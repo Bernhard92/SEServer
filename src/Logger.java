@@ -22,9 +22,9 @@ public class Logger {
         }
     }
 
-    public synchronized void storeAccess(String ip, int matrNumber) {
+    public synchronized void storeAccess(String ip, String matrNumber) {
         try {
-            writeToFile("clientData.csv", new Date() + ", [" + ip + "], " + String.valueOf(matrNumber) + "\n");
+            writeToFile("clientData.csv", new Date() + ", [" + ip + "], [" + matrNumber + "]\n");
         } catch (IOException e) {
             this.log(e.getMessage());
         }
