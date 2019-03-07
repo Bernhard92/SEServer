@@ -1,6 +1,7 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Date;
 
 public class Logger {
     private static Logger _logger = null;
@@ -23,7 +24,7 @@ public class Logger {
 
     public synchronized void storeAccess(String ip, int matrNumber) {
         try {
-            writeToFile("clientData.csv", ip + ", " + String.valueOf(matrNumber) + "\n");
+            writeToFile("clientData.csv", new Date() + ", [" + ip + "], " + String.valueOf(matrNumber) + "\n");
         } catch (IOException e) {
             this.log(e.getMessage());
         }

@@ -25,7 +25,7 @@ public class TCPClient {
                 }
 
                 //Connect to server
-                Socket clientSocket = new Socket("localhost", TCPServer.port);
+                Socket clientSocket = new Socket("se2-isys.aau.at", 53212);
                 DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
                 BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
